@@ -1,0 +1,41 @@
+[
+  {
+    "message_id": 1001,
+    "channel_name": "Tikvah Pharma",
+    "channel_username": "tikvah_pharma",
+    "message_date": "2026-06-22T09:30:00+00:00",
+    "message_text": "Amoxicillin, zinc, and cough syrup available. Ask pharmacist before use.",
+    "views": 3200,
+    "forwards": 70,
+    "has_media": true,
+    "media_type": "MessageMediaPhoto",
+    "image_path": "data/raw/images/tikvah_pharma/1001.jpg",
+    "scraped_at": "2026-06-28T10:00:00+00:00"
+  },
+  {
+    "message_id": 1002,
+    "channel_name": "Tikvah Pharma",
+    "channel_username": "tikvah_pharma",
+    "message_date": "2026-06-23T09:30:00+00:00",
+    "message_text": "Diabetes test strips and glucometer devices in stock.",
+    "views": 2900,
+    "forwards": 64,
+    "has_media": true,
+    "media_type": "MessageMediaPhoto",
+    "image_path": "data/raw/images/tikvah_pharma/1002.jpg",
+    "scraped_at": "2026-06-28T10:00:00+00:00"
+  },
+  {
+    "message_id": 1003,
+    "channel_name": "Tikvah Pharma",
+    "channel_username": "tikvah_pharma",
+    "message_date": "2026-06-24T09:30:00+00:00",
+    "message_text": "Weekly pharmacy update: common cold medicines and first aid items.",
+    "views": 2500,
+    "forwards": 41,
+    "has_media": false,
+    "media_type": null,
+    "image_path": null,
+    "scraped_at": "2026-06-28T10:00:00+00:00"
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "message_id": 1001,
+    "channel_name": "CheMed Telegram Channel",
+    "channel_username": "chemed",
+    "message_date": "2026-06-22T09:30:00+00:00",
+    "message_text": "Paracetamol 500mg available. Price 120 ETB per strip. Contact us for delivery.",
+    "views": 1200,
+    "forwards": 34,
+    "has_media": true,
+    "media_type": "MessageMediaPhoto",
+    "image_path": "data/raw/images/chemed/1001.jpg",
+    "scraped_at": "2026-06-28T10:00:00+00:00"
+  },
+  {
+    "message_id": 1002,
+    "channel_name": "CheMed Telegram Channel",
+    "channel_username": "chemed",
+    "message_date": "2026-06-23T09:30:00+00:00",
+    "message_text": "Digital blood pressure monitor available for clinics and home use.",
+    "views": 980,
+    "forwards": 21,
+    "has_media": true,
+    "media_type": "MessageMediaPhoto",
+    "image_path": "data/raw/images/chemed/1002.jpg",
+    "scraped_at": "2026-06-28T10:00:00+00:00"
+  },
+  {
+    "message_id": 1003,
+    "channel_name": "CheMed Telegram Channel",
+    "channel_username": "chemed",
+    "message_date": "2026-06-24T09:30:00+00:00",
+    "message_text": "Vitamin C tablets and oral rehydration salts now in stock.",
+    "views": 740,
+    "forwards": 12,
+    "has_media": false,
+    "media_type": null,
+    "image_path": null,
+    "scraped_at": "2026-06-28T10:00:00+00:00"
+  }
+]

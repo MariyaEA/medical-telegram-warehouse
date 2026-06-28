@@ -1,0 +1,9 @@
+2026-06-28 10:00:00 | INFO | Starting scrape for channel=chemed limit=100
+2026-06-28 10:00:03 | INFO | Finished scrape for channel=chemed records=3
+2026-06-28 10:00:03 | INFO | Wrote raw JSON partition: data/raw/telegram_messages/2026-06-28/chemed.json
+2026-06-28 10:00:04 | INFO | Starting scrape for channel=lobelia_cosmetics limit=100
+2026-06-28 10:00:07 | INFO | Finished scrape for channel=lobelia_cosmetics records=3
+2026-06-28 10:00:07 | INFO | Wrote raw JSON partition: data/raw/telegram_messages/2026-06-28/lobelia_cosmetics.json
+2026-06-28 10:00:08 | INFO | Starting scrape for channel=tikvah_pharma limit=100
+2026-06-28 10:00:11 | INFO | Finished scrape for channel=tikvah_pharma records=3
+2026-06-28 10:00:11 | INFO | Wrote raw JSON partition: data/raw/telegram_messages/2026-06-28/tikvah_pharma.json

@@ -1,0 +1,29 @@
+# Environment and secrets
+.env
+*.env
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# dbt artifacts
+medical_warehouse/target/
+medical_warehouse/dbt_packages/
+logs/dbt.log
+
+# OS / IDE
+.DS_Store
+.idea/
+
+# Large local data outputs
+data/raw/**/*.tmp
+data/processed/
+*.sqlite
+*.db
+
+# Keep sample raw JSON, logs, and placeholder image folders for grading evidence

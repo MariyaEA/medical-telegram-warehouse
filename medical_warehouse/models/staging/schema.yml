@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_telegram_messages
+    description: Cleaned and standardized Telegram messages from the raw PostgreSQL schema.
+    columns:
+      - name: message_id
+        description: Original Telegram message identifier within a channel.
+        tests:
+          - not_null
+      - name: channel_slug
+        description: Normalized Telegram channel username.
+        tests:
+          - not_null
+      - name: message_timestamp
+        description: UTC timestamp of the Telegram message.
+        tests:
+          - not_null
+      - name: view_count
+        description: Number of views recorded by Telegram at scraping time.
+      - name: forward_count
+        description: Number of forwards recorded by Telegram at scraping time.
