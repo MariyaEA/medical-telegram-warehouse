@@ -1,119 +1,245 @@
 # B9W8: Shipping a Data Product — Medical Telegram Warehouse
 
-This repository is the interim submission for **B9W8: Shipping a Data Product: From Raw Telegram Data to an Analytical Warehouse**. It implements Task 1 and Task 2: Telegram scraping, raw data lake storage, raw loading into PostgreSQL, and dbt-based dimensional modeling.
+**Author:** Mariamawit Ewnetu Alemu  
+**Program:** 10 Academy AI Mastery  
+**Project:** From Raw Telegram Data to an Analytical API
+
+This repository implements an end-to-end data product for Kara Solutions. It extracts public Telegram data from Ethiopian medical-related channels, stores raw messages and images in a data lake, loads the raw data into PostgreSQL, transforms it with dbt into a star schema, enriches images using YOLOv8, exposes analytical insights through FastAPI, and orchestrates the workflow with Dagster.
 
 ## Business Objective
 
-Kara Solutions needs an analytical data platform for Ethiopian medical and pharmaceutical Telegram channels. The platform collects raw public Telegram messages and turns them into trusted warehouse tables that can answer questions about product mentions, posting activity, channel behavior, views, forwards, and image usage.
+Ethiopian medical and pharmaceutical businesses frequently use Telegram to advertise products, share availability updates, and engage customers. The goal of this project is to convert that unstructured Telegram activity into reliable analytical data that can answer business questions such as:
 
-## Data Sources
+- What are the top mentioned medical products across channels?
+- Which channels post most frequently?
+- How does channel engagement vary over time?
+- Which channels rely most on visual content?
+- Do image categories provide additional analytical value?
 
-The scraper targets these public Telegram channels:
+## Architecture
 
-- CheMed Telegram Channel
-- Lobelia Cosmetics
-- Tikvah Pharma
-
-Additional Ethiopian medical channels can be added in `src/scraper.py` through the `CHANNELS` list.
+```text
+Telegram Channels
+CheMed | Lobelia Cosmetics | Tikvah Pharma
+        ↓
+Telethon Scraper
+        ↓
+Raw Data Lake: JSON + Images
+        ↓
+PostgreSQL raw schema
+        ↓
+dbt staging + marts
+        ↓
+YOLOv8 image enrichment
+        ↓
+FastAPI analytical endpoints
+        ↓
+Dagster orchestration
+```
 
 ## Repository Structure
 
 ```text
 medical-telegram-warehouse/
+├── .github/workflows/unittests.yml
+├── api/
+│   ├── main.py
+│   ├── database.py
+│   └── schemas.py
+├── data/
+│   ├── raw/
+│   │   ├── telegram_messages/YYYY-MM-DD/channel_name.json
+│   │   └── images/channel_name/message_id.jpg
+│   └── processed/yolo_detections.csv
+├── logs/
+│   ├── scraper.log
+│   └── yolo_detection.log
+├── medical_warehouse/
+│   ├── dbt_project.yml
+│   ├── profiles.yml
+│   ├── models/staging/
+│   ├── models/marts/
+│   └── tests/
 ├── src/
 │   ├── scraper.py
-│   └── load_raw_to_postgres.py
-├── data/raw/
-│   ├── telegram_messages/YYYY-MM-DD/channel_name.json
-│   └── images/channel_name/message_id.jpg
-├── logs/
-│   └── scraper.log
-└── medical_warehouse/
-    ├── dbt_project.yml
-    ├── profiles.yml
-    ├── models/staging/stg_telegram_messages.sql
-    ├── models/marts/dim_channels.sql
-    ├── models/marts/dim_dates.sql
-    ├── models/marts/fct_messages.sql
-    └── tests/
+│   ├── load_raw_to_postgres.py
+│   ├── yolo_detect.py
+│   └── load_yolo_to_postgres.py
+├── tests/
+├── pipeline.py
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── .env.example
 ```
 
-## Environment Setup
+## Task Coverage
 
-Create a virtual environment and install dependencies:
+### Task 1 — Data Scraping and Collection
+
+- `src/scraper.py` uses Telethon-based scraping logic.
+- Target channels include CheMed, Lobelia Cosmetics, and Tikvah Pharma.
+- Raw messages are stored in `data/raw/telegram_messages/YYYY-MM-DD/channel_name.json`.
+- Images are stored in `data/raw/images/{channel_name}/{message_id}.jpg`.
+- Logs are written to `logs/scraper.log`.
+
+Collected fields include:
+
+- `message_id`
+- `channel_name`
+- `message_date`
+- `message_text`
+- `views`
+- `forwards`
+- `has_media`
+- `image_path`
+
+### Task 2 — dbt Transformation
+
+- `src/load_raw_to_postgres.py` loads raw JSON into PostgreSQL.
+- dbt project is located in `medical_warehouse/`.
+- Staging model: `stg_telegram_messages.sql`.
+- Mart models:
+  - `dim_channels.sql`
+  - `dim_dates.sql`
+  - `fct_messages.sql`
+- dbt tests include unique, not-null, relationships, and custom SQL tests.
+
+### Task 3 — YOLOv8 Image Enrichment
+
+- `src/yolo_detect.py` uses YOLOv8 nano: `yolov8n.pt`.
+- Detection results are saved to `data/processed/yolo_detections.csv`.
+- Image categories implemented:
+  - `promotional`
+  - `product_display`
+  - `lifestyle`
+  - `other`
+- `models/marts/fct_image_detections.sql` joins YOLO results with `fct_messages`.
+
+### Task 4 — FastAPI Analytical API
+
+FastAPI files are located in `api/`.
+
+Implemented endpoints:
+
+```text
+GET /api/reports/top-products?limit=10
+GET /api/channels/{channel_name}/activity
+GET /api/search/messages?query=paracetamol&limit=20
+GET /api/reports/visual-content
+```
+
+Run the API:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uvicorn api.main:app --reload
 ```
 
-Copy the environment template and fill in your private credentials:
+Open API docs:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Task 5 — Dagster Orchestration
+
+The orchestration file is `pipeline.py`.
+
+Defined Dagster ops:
+
+- `scrape_telegram_data`
+- `load_raw_to_postgres`
+- `run_dbt_transformations`
+- `run_yolo_enrichment`
+
+A daily schedule is defined using Dagster `ScheduleDefinition`.
+
+Run Dagster:
+
+```bash
+dagster dev -f pipeline.py
+```
+
+Open Dagster UI:
+
+```text
+http://localhost:3000
+```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in your credentials:
 
 ```bash
 cp .env.example .env
 ```
 
-`.env` is intentionally ignored by Git and must never be committed.
+Required variables:
 
-## Run PostgreSQL
+```text
+TELEGRAM_API_ID=
+TELEGRAM_API_HASH=
+TELEGRAM_PHONE=
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=medical_warehouse
+```
+
+## Setup
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Start PostgreSQL with Docker if available:
 
 ```bash
 docker compose up -d
 ```
 
-## Task 1: Telegram Scraping
+Or use a local PostgreSQL installation.
 
-Run the scraper:
+## Run the Pipeline Manually
 
 ```bash
 python src/scraper.py
-```
-
-The scraper:
-
-- Uses Telethon.
-- Extracts `message_id`, `channel_name`, `message_date`, `message_text`, `views`, `forwards`, `has_media`, `media_type`, and `image_path`.
-- Writes raw JSON files to `data/raw/telegram_messages/YYYY-MM-DD/channel_name.json`.
-- Downloads images to `data/raw/images/channel_name/message_id.jpg`.
-- Writes logs to `logs/scraper.log`.
-
-A small sample raw data lake is included for grading visibility.
-
-## Task 2: Raw Loading and dbt Transformation
-
-Load raw JSON into PostgreSQL:
-
-```bash
 python src/load_raw_to_postgres.py
-```
-
-Run dbt:
-
-```bash
 cd medical_warehouse
+dbt debug
 dbt run
 dbt test
+cd ..
+python src/yolo_detect.py
+python src/load_yolo_to_postgres.py
+uvicorn api.main:app --reload
 ```
 
-## Warehouse Design
+## Testing
 
-The dbt models implement a star schema.
+```bash
+pytest -q
+```
 
-### Dimensions
+GitHub Actions CI is configured in `.github/workflows/unittests.yml`.
 
-- `dim_channels`: one row per Telegram channel, including channel type, first/last post date, total posts, and average views.
-- `dim_dates`: calendar dimension with day, week, month, quarter, year, and weekend fields.
+## Git Workflow Evidence
 
-### Fact Table
+Recommended task branches:
 
-- `fct_messages`: one row per Telegram message, linked to `dim_channels` and `dim_dates`. It includes message text, message length, views, forwards, and image flags.
+```text
+task-1-scraping
+task-2-dbt
+task-3-yolo
+task-4-api
+task-5-dagster
+```
 
-## Data Quality Tests
+Each task branch should be merged into `main` through a Pull Request.
 
-The project includes dbt schema tests and custom SQL tests:
+## Notes
 
-- Primary keys are `unique` and `not_null`.
-- Foreign keys are tested with `relationships`.
-- `assert_no_future_messages.sql` checks that message dates are not in the future.
-- `assert_positive_views.sql` checks that view counts are non-negative.
+The repository includes small sample raw data, images, logs, and YOLO detection CSV evidence so evaluators can verify the expected structure without requiring access to private Telegram credentials.

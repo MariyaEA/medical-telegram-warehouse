@@ -55,3 +55,33 @@ models:
         description: Telegram view count, expected to be non-negative.
       - name: forward_count
         description: Telegram forward count, expected to be non-negative.
+
+  - name: fct_image_detections
+    description: Fact table linking YOLOv8 detections to Telegram message facts.
+    columns:
+      - name: image_detection_key
+        tests:
+          - unique
+          - not_null
+      - name: message_id
+        tests:
+          - not_null
+      - name: channel_key
+        tests:
+          - relationships:
+              to: ref('dim_channels')
+              field: channel_key
+      - name: date_key
+        tests:
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
+      - name: detected_class
+        tests:
+          - not_null
+      - name: confidence_score
+        tests:
+          - not_null
+      - name: image_category
+        tests:
+          - not_null

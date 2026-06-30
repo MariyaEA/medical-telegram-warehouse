@@ -1,0 +1,8 @@
+message_id,channel_name,image_path,detected_class,confidence_score,image_category
+1001,chemed,data/raw/images/chemed/1001.jpg,bottle,0.82,product_display
+1002,chemed,data/raw/images/chemed/1002.jpg,person,0.76,promotional
+1002,chemed,data/raw/images/chemed/1002.jpg,bottle,0.71,promotional
+1001,lobelia_cosmetics,data/raw/images/lobelia_cosmetics/1001.jpg,bottle,0.88,product_display
+1002,lobelia_cosmetics,data/raw/images/lobelia_cosmetics/1002.jpg,person,0.67,lifestyle
+1001,tikvah_pharma,data/raw/images/tikvah_pharma/1001.jpg,bottle,0.79,product_display
+1002,tikvah_pharma,data/raw/images/tikvah_pharma/1002.jpg,none,0.0,other
